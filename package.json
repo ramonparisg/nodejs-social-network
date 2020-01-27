@@ -2,9 +2,11 @@
   "name": "social-network",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/api/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start_local": "nodemon ./src/api/index.js",
+    "debug": "nodemon --inspect ./src/api/index.js"
   },
   "keywords": [],
   "author": "Ramon Paris",
