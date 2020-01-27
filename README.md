@@ -9,4 +9,9 @@ It is a node project that has a microservice structure to simulate a social netw
 
 ## Database model
 
-## Environment variables
+# Environment variables
+
+## API
+| Variable |  Type   |   Description   | Default |
+| :------: | :-----: | :-------------: | ------- |
+| API_PORT | Integer | Port of the API | 3000    |
