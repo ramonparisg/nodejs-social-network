@@ -21,13 +21,18 @@ const get = async (table, id) => {
 };
 
 const upsert = async (table, data) => {
+  if (!db[table]) {
+    db[table] = [];
+  }
   const t = await list(table);
   const indexToUpdate = t.findIndex(row => row.id === data.id);
   if (indexToUpdate !== -1) {
-    t[indexToUpdate] = { ...data };
+    t[indexToUpdate] = { ...t[indexToUpdate], ...data };
   } else {
     t.push(data);
   }
+
+  console.log(data);
   return data;
 };
 
