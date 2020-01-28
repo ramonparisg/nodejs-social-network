@@ -22,10 +22,17 @@ const get = async (table, id) => {
 
 const upsert = async (table, data) => {
   const t = await list(table);
-  t.push(data);
+  const indexToUpdate = t.findIndex(row => row.id === data.id);
+  if (indexToUpdate !== -1) {
+    t[indexToUpdate] = { ...data };
+  } else {
+    t.push(data);
+  }
+  return data;
 };
 
 const remove = async (table, id) => {
+  db[table] = db[table].filter(data => data.id !== id);
   return true;
 };
 

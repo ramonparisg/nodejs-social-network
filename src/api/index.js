@@ -5,6 +5,8 @@ const config = require("../config");
 const user = require("./components/user/userNetwork");
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use("/user", user);
 

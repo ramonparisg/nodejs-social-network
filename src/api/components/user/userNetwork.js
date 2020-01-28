@@ -25,4 +25,37 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.post("/", (req, res) => {
+  controller
+    .add(req.body)
+    .then(data => {
+      response.success(req, res, data);
+    })
+    .catch(e => {
+      response.error(req, res, e);
+    });
+});
+
+router.put("/", (req, res) => {
+  controller
+    .update(req.body)
+    .then(data => {
+      response.success(req, res, data);
+    })
+    .catch(e => {
+      response.error(req, res, e);
+    });
+});
+
+router.delete("/:id", (req, res) => {
+  controller
+    .remove(req.params.id)
+    .then(data => {
+      response.success(req, res, data);
+    })
+    .catch(e => {
+      response.error(req, res, e);
+    });
+});
+
 module.exports = router;

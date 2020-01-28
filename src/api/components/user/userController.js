@@ -14,8 +14,33 @@ module.exports = injectedStore => {
     return store.get(TABLE, id);
   };
 
+  const add = userRequest => {
+    const user = {
+      id: userRequest.id,
+      name: userRequest.name
+    };
+
+    return store.upsert(TABLE, user);
+  };
+
+  const update = userRequest => {
+    const user = {
+      id: userRequest.id,
+      name: userRequest.name
+    };
+
+    return store.upsert(TABLE, user);
+  };
+
+  const remove = id => {
+    return store.remove(TABLE, id);
+  };
+
   return {
     list,
-    get
+    get,
+    add,
+    remove,
+    update
   };
 };
