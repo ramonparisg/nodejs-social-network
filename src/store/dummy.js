@@ -32,7 +32,6 @@ const upsert = async (table, data) => {
     t.push(data);
   }
 
-  console.log(data);
   return data;
 };
 

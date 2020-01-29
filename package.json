@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "http-status-codes": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.1.0",
     "nanoid": "^2.1.10",
     "swagger-ui-express": "^4.1.3"
   }
