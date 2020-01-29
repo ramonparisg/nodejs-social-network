@@ -1,6 +1,7 @@
 module.exports = {
   api: {
     port: process.env.API_PORT || 3000,
-    SECRET_KEY: process.env.SECRET_KEY || "secret"
+    JWT_SECRET: process.env.SECRET_KEY || "secret",
+    AUTH_TOKEN_TYPE: process.env.AUTH_TOKEN_TYPE || "Bearer "
   }
 };
