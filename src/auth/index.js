@@ -10,9 +10,13 @@ const verify = token => {
 };
 
 const check = {
-  owner: function(req, owner) {
+  own: function(req, owner) {
     const decoded = decodeHeader(req);
     console.log(decoded);
+
+    if (decoded.id !== owner) {
+      throw new Error("You don't have permissions to do this");
+    }
   }
 };
 

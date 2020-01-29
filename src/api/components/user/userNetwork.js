@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const response = require("../../../network/response");
 const controller = require("./index");
+const secure = require("./userSecure");
 
 router.get("/", (req, res) => {
   controller
@@ -36,7 +37,7 @@ router.post("/", (req, res) => {
     });
 });
 
-router.put("/", (req, res) => {
+router.put("/", secure("update"), (req, res) => {
   controller
     .update(req.body)
     .then(data => {
