@@ -1,4 +1,4 @@
-const TABLE = "auth";
+const TABLE = "auths";
 const auth = require("../../../auth");
 const bcrypt = require("bcrypt");
 
@@ -9,12 +9,18 @@ module.exports = injectedStore => {
   }
 
   const login = async (username, password) => {
-    const data = await store.query(TABLE, { username: username });
+    const result = await store.query(TABLE, { username: username });
+    let data = result;
+    if (data && data.length > 0) {
+      data = result[0];
+    } else {
+      throw new Error("Invalid data");
+    }
     const equals = await bcrypt.compare(password, data.password);
 
     if (equals) {
       return {
-        token: auth.sign(data)
+        token: auth.sign({ id: data.id, username: data.username })
       };
     } else {
       throw new Error("Invalid data");

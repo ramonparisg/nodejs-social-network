@@ -1,4 +1,4 @@
-const TABLE = "user";
+const TABLE = "users";
 const auth = require("../auth");
 const nanoid = require("nanoid");
 
@@ -40,23 +40,20 @@ module.exports = injectedStore => {
   };
 
   const update = async userRequest => {
-    const user = await get(userRequest.id);
+    let user = await get(userRequest.id);
 
-    if (!user) {
+    if (!user || user.length === 0) {
       return Promise.reject(`User ${userRequest.id} does not exist`);
+    } else {
+      user = { ...user[0] };
     }
 
-    const userUpdated = {
-      name: userRequest.name,
-      username: userRequest.username
-    };
-
-    if (userUpdated.username) {
-      user.username = userUpdated.username;
+    if (userRequest.username) {
+      user.username = userRequest.username;
     }
 
-    if (userUpdated.name) {
-      user.name = userUpdated.name;
+    if (userRequest.name) {
+      user.name = userRequest.name;
     }
 
     if (userRequest.password || userRequest.username) {

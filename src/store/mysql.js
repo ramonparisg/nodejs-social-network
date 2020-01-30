@@ -35,7 +35,7 @@ handleCon();
 
 function list(table) {
   return new Promise((resolve, reject) => {
-    connection.query("SELECT * FROM USERS", (err, data) => {
+    connection.query(`SELECT * FROM ${table}`, (err, data) => {
       if (err) return reject(err);
 
       return resolve(data);
@@ -43,6 +43,71 @@ function list(table) {
   });
 }
 
+function get(table, id) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `SELECT * FROM ${table} WHERE ID = '${id}'`,
+      (err, data) => {
+        if (err) return reject(err);
+        return resolve(data);
+      }
+    );
+  });
+}
+
+function insert(table, data) {
+  return new Promise((resolve, reject) => {
+    connection.query(`INSERT INTO ${table} SET ?`, data, (err, data) => {
+      if (err) return reject(err);
+      return resolve(data);
+    });
+  });
+}
+
+function update(table, data) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `UPDATE ${table} SET ? WHERE id = ?`,
+      [data, data.id],
+      (err, data) => {
+        if (err) return reject(err);
+        return resolve(data);
+      }
+    );
+  });
+}
+
+async function upsert(table, data) {
+  const row = await get(table, data.id);
+  if (row.length === 0) {
+    return insert(table, data);
+  } else {
+    return update(table, data);
+  }
+}
+
+function query(table, data) {
+  return new Promise((resolve, reject) => {
+    connection.query(`SELECT * FROM ${table} WHERE ?`, data, (err, data) => {
+      if (err) return reject(err);
+      return resolve(data || null);
+    });
+  });
+}
+
+function remove(table, id) {
+  return new Promise((resolve, reject) => {
+    connection.query(`DELETE FROM ${table} WHERE id = '${id}'`, (err, data) => {
+      if (err) return reject(err);
+      return resolve(data);
+    });
+  });
+}
+
 module.exports = {
-  list
+  list,
+  get,
+  upsert,
+  query,
+  remove
 };
