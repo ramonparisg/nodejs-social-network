@@ -4,59 +4,49 @@ const response = require("../../../network/response");
 const controller = require("./index");
 const secure = require("./userSecure");
 
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   controller
     .list()
     .then(data => {
       response.success(req, res, data);
     })
-    .catch(e => {
-      response.error(req, res, e);
-    });
+    .catch(next);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   controller
     .get(req.params.id)
     .then(data => {
       response.success(req, res, data);
     })
-    .catch(e => {
-      response.error(req, res, e);
-    });
+    .catch(next);
 });
 
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
   controller
     .add(req.body)
     .then(data => {
       response.success(req, res, data);
     })
-    .catch(e => {
-      response.error(req, res, e);
-    });
+    .catch(next);
 });
 
-router.put("/", secure("update"), (req, res) => {
+router.put("/", secure("update"), (req, res, next) => {
   controller
     .update(req.body)
     .then(data => {
       response.success(req, res, data);
     })
-    .catch(e => {
-      response.error(req, res, e);
-    });
+    .catch(next);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res, next) => {
   controller
     .remove(req.params.id)
     .then(data => {
       response.success(req, res, data);
     })
-    .catch(e => {
-      response.error(req, res, e);
-    });
+    .catch(next);
 });
 
 module.exports = router;

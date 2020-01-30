@@ -4,11 +4,11 @@ const error = require("../utils/errors");
 const httpStatus = require("http-status-codes");
 
 const sign = data => {
-  return jwt.sign(data, config.api.JWT_SECRET);
+  return jwt.sign(data, config.jwt.jwt_secret);
 };
 
 const verify = token => {
-  return jwt.verify(token, config.api.JWT_SECRET);
+  return jwt.verify(token, config.jwt.jwt_secret);
 };
 
 const check = {
@@ -29,11 +29,11 @@ const getToken = auth => {
     throw error("There is no token", httpStatus.BAD_REQUEST);
   }
 
-  if (auth.indexOf(config.api.AUTH_TOKEN_TYPE) === -1) {
+  if (auth.indexOf(config.jwt.auth_token_type) === -1) {
     throw error("Token type is not ok", httpStatus.BAD_REQUEST);
   }
 
-  return auth.replace(config.api.AUTH_TOKEN_TYPE, "");
+  return auth.replace(config.jwt.auth_token_type, "");
 };
 
 const decodeHeader = req => {
