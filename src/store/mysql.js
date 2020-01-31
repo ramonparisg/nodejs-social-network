@@ -78,7 +78,11 @@ function update(table, data) {
 }
 
 async function upsert(table, data) {
-  const row = await get(table, data.id);
+  let row = [];
+  if (data.id) {
+    row = await get(table, data.id);
+  }
+
   if (row.length === 0) {
     return insert(table, data);
   } else {
@@ -86,21 +90,41 @@ async function upsert(table, data) {
   }
 }
 
-function query(table, data) {
+function query(table, query, join) {
+  let joinQuery = "";
+  if (join) {
+    const key = Object.keys(join)[0];
+    const val = join[key];
+    joinQuery = `JOIN ${key} ON ${table}.${val} = ${key}.id`;
+  }
+
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM ${table} WHERE ?`, data, (err, data) => {
-      if (err) return reject(err);
-      return resolve(data || null);
-    });
+    connection.query(
+      `SELECT * FROM ${table} ${joinQuery} WHERE ${table}.?`,
+      query,
+      (err, res) => {
+        if (err) return reject(err);
+        resolve(res || null);
+      }
+    );
   });
 }
 
-function remove(table, id) {
+function remove(table, firstCondition, othersCondition = []) {
+  let andConditions = "";
+  if (othersCondition.length > 0) {
+    andConditions = othersCondition.map(c => "AND ?").join(" ");
+  }
+
   return new Promise((resolve, reject) => {
-    connection.query(`DELETE FROM ${table} WHERE id = '${id}'`, (err, data) => {
-      if (err) return reject(err);
-      return resolve(data);
-    });
+    connection.query(
+      `DELETE FROM ${table} WHERE ? ${andConditions}`,
+      [firstCondition, ...othersCondition],
+      (err, data) => {
+        if (err) return reject(err);
+        return resolve(data);
+      }
+    );
   });
 }
 

@@ -68,7 +68,30 @@ module.exports = injectedStore => {
   };
 
   const remove = id => {
-    return store.remove(TABLE, id);
+    return store.remove(TABLE, { id: id });
+  };
+
+  const follow = (from, to) => {
+    return store.upsert("follows", {
+      user_from: from,
+      user_to: to
+    });
+  };
+
+  const findFollowers = userId => {
+    const join = {};
+    join[TABLE] = "user_from";
+    return store.query("follows", { user_to: userId }, join);
+  };
+
+  const findFollowings = userId => {
+    const join = {};
+    join[TABLE] = "user_to";
+    return store.query("follows", { user_from: userId }, join);
+  };
+
+  const unfollow = (from, to) => {
+    return store.remove("follows", { user_from: from }, [{ user_to: to }]);
   };
 
   return {
@@ -76,6 +99,10 @@ module.exports = injectedStore => {
     get,
     add,
     remove,
-    update
+    update,
+    follow,
+    unfollow,
+    findFollowers,
+    findFollowings
   };
 };

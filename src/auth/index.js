@@ -21,6 +21,9 @@ const check = {
         httpStatus.UNAUTHORIZED
       );
     }
+  },
+  logging: function(req) {
+    const decoded = decodeHeader(req);
   }
 };
 
@@ -40,6 +43,8 @@ const decodeHeader = req => {
   const authorization = req.headers.authorization;
   const token = getToken(authorization);
   const decoded = verify(token);
+
+  req.user = decoded;
 
   return decoded;
 };
