@@ -1,18 +1,20 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const error = require("../utils/errors");
+const moment = require("moment");
 const httpStatus = require("http-status-codes");
 
-const sign = data => {
-  return jwt.sign(data, config.jwt.jwt_secret);
+const sign = (data) => {
+  const expirationDate = moment().add(1, "hour").unix();
+  return jwt.sign({ ...data, exp: expirationDate }, config.jwt.jwt_secret);
 };
 
-const verify = token => {
+const verify = (token) => {
   return jwt.verify(token, config.jwt.jwt_secret);
 };
 
 const check = {
-  own: function(req, owner) {
+  own: function (req, owner) {
     const decoded = decodeHeader(req);
 
     if (decoded.id !== owner) {
@@ -22,12 +24,12 @@ const check = {
       );
     }
   },
-  logging: function(req) {
-    const decoded = decodeHeader(req);
-  }
+  logging: function (req) {
+    decodeHeader(req);
+  },
 };
 
-const getToken = auth => {
+const getToken = (auth) => {
   if (!auth) {
     throw error("There is no token", httpStatus.BAD_REQUEST);
   }
@@ -39,17 +41,20 @@ const getToken = auth => {
   return auth.replace(config.jwt.auth_token_type, "");
 };
 
-const decodeHeader = req => {
+const decodeHeader = (req) => {
   const authorization = req.headers.authorization;
   const token = getToken(authorization);
-  const decoded = verify(token);
+  try {
+    const decoded = verify(token);
+    req.user = decoded;
 
-  req.user = decoded;
-
-  return decoded;
+    return decoded;
+  } catch (e) {
+    throw error(e.message, httpStatus.UNAUTHORIZED);
+  }
 };
 
 module.exports = {
   sign,
-  check
+  check,
 };

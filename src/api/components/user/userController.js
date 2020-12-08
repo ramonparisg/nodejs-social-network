@@ -2,8 +2,8 @@ const TABLE = "users";
 const auth = require("../auth");
 const nanoid = require("nanoid");
 
-module.exports = injectedStore => {
-  const store = injectedStore;
+module.exports = (injectedStore) => {
+  let store = injectedStore;
   if (!store) {
     store = require("../../../store/dummy");
   }
@@ -12,11 +12,11 @@ module.exports = injectedStore => {
     return store.list(TABLE);
   };
 
-  const get = id => {
+  const get = (id) => {
     return store.get(TABLE, id);
   };
 
-  const add = async userRequest => {
+  const add = async (userRequest) => {
     let calculatedId = userRequest.id;
     if (!calculatedId) {
       calculatedId = nanoid();
@@ -25,21 +25,21 @@ module.exports = injectedStore => {
     const user = {
       id: calculatedId,
       name: userRequest.name,
-      username: userRequest.username
+      username: userRequest.username,
     };
 
     if (userRequest.password || userRequest.username) {
       await auth.upsert({
         id: calculatedId,
         username: userRequest.username,
-        password: userRequest.password
+        password: userRequest.password,
       });
     }
 
     return store.upsert(TABLE, user);
   };
 
-  const update = async userRequest => {
+  const update = async (userRequest) => {
     let user = await get(userRequest.id);
 
     if (!user || user.length === 0) {
@@ -60,31 +60,31 @@ module.exports = injectedStore => {
       await auth.upsert({
         id: user.id,
         username: userRequest.username,
-        password: userRequest.password
+        password: userRequest.password,
       });
     }
 
     return store.upsert(TABLE, user);
   };
 
-  const remove = id => {
+  const remove = (id) => {
     return store.remove(TABLE, { id: id });
   };
 
   const follow = (from, to) => {
     return store.upsert("follows", {
       user_from: from,
-      user_to: to
+      user_to: to,
     });
   };
 
-  const findFollowers = userId => {
+  const findFollowers = (userId) => {
     const join = {};
     join[TABLE] = "user_from";
     return store.query("follows", { user_to: userId }, join);
   };
 
-  const findFollowings = userId => {
+  const findFollowings = (userId) => {
     const join = {};
     join[TABLE] = "user_to";
     return store.query("follows", { user_from: userId }, join);
@@ -103,6 +103,6 @@ module.exports = injectedStore => {
     follow,
     unfollow,
     findFollowers,
-    findFollowings
+    findFollowings,
   };
 };
