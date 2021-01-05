@@ -4,6 +4,7 @@ const express = require("express");
 const config = require("../config");
 const user = require("./components/user/userNetwork");
 const auth = require("./components/auth/authNetwork");
+const post = require("./components/post/postNetwork");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDoc = require("./swagger.json");
 const error = require("../network/error");
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/user", user);
 app.use("/api/auth", auth);
+app.use("/api/post", post);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use(error);
 

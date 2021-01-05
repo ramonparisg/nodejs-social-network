@@ -1,6 +1,7 @@
 const mysql = require("mysql2");
 const config = require("../config");
 const logger = require("../utils/logger")("MySQL");
+const _ = require("lodash");
 const dbConf = {
   host: config.mysql.host,
   user: config.mysql.user,
@@ -49,7 +50,7 @@ function get(table, id) {
       `SELECT * FROM ${table} WHERE ID = '${id}'`,
       (err, data) => {
         if (err) return reject(err);
-        return resolve(data);
+        return resolve(data.length ? data[0] : {});
       }
     );
   });
@@ -83,7 +84,7 @@ async function upsert(table, data) {
     row = await get(table, data.id);
   }
 
-  if (row.length === 0) {
+  if (!row.length) {
     return insert(table, data);
   } else {
     return update(table, data);

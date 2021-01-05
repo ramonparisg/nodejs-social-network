@@ -4,7 +4,7 @@ module.exports = {
   },
   jwt: {
     jwt_secret: process.env.SECRET_KEY,
-    auth_token_type: process.env.AUTH_TOKEN_TYPE,
+    auth_token_type: process.env.AUTH_TOKEN_TYPE || "Bearer ",
   },
   mysql: {
     host: process.env.MYSQL_HOST,
