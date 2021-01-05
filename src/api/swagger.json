@@ -13,25 +13,56 @@
       "description": "User operations"
     }
   ],
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "paths": {
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Find user by id",
+        "operationId": "findUserById",
+        "responses": {
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "description": "user found by id"
+          }
+        }
+      }
+    },
     "/user": {
       "get": {
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "summary": "List the users",
         "operationId": "listUser",
         "responses": {
           "default": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            },
             "description": "List all users"
           }
         }
       },
       "post": {
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "summary": "Create an user",
         "description": "Create and user in the APP",
         "operationId": "createUser",
-        "produces": ["application/json"],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "in": "body",

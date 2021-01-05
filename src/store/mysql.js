@@ -1,18 +1,18 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const config = require("../config");
 const logger = require("../utils/logger")("MySQL");
 const dbConf = {
   host: config.mysql.host,
   user: config.mysql.user,
   password: config.mysql.password,
-  database: config.mysql.database
+  database: config.mysql.database,
 };
 
 let connection;
 
 function handleCon() {
   connection = mysql.createConnection(dbConf);
-  connection.connect(err => {
+  connection.connect((err) => {
     if (err) {
       logger.error(err);
       setTimeout(handleCon, 2000);
@@ -21,7 +21,7 @@ function handleCon() {
     }
   });
 
-  connection.on("error", err => {
+  connection.on("error", (err) => {
     logger.error(err);
     if (err === "PROTOCOL_CONNECTION_LOST") {
       handleCon();
@@ -57,7 +57,7 @@ function get(table, id) {
 
 function insert(table, data) {
   return new Promise((resolve, reject) => {
-    connection.query(`INSERT INTO ${table} SET ?`, data, (err, data) => {
+    connection.query(`INSERT INTO ${table} SET ?`, data, (err) => {
       if (err) return reject(err);
       return resolve(data);
     });
@@ -69,7 +69,7 @@ function update(table, data) {
     connection.query(
       `UPDATE ${table} SET ? WHERE id = ?`,
       [data, data.id],
-      (err, data) => {
+      (err) => {
         if (err) return reject(err);
         return resolve(data);
       }
@@ -113,7 +113,7 @@ function query(table, query, join) {
 function remove(table, firstCondition, othersCondition = []) {
   let andConditions = "";
   if (othersCondition.length > 0) {
-    andConditions = othersCondition.map(c => "AND ?").join(" ");
+    andConditions = othersCondition.map((c) => "AND ?").join(" ");
   }
 
   return new Promise((resolve, reject) => {
@@ -133,5 +133,5 @@ module.exports = {
   get,
   upsert,
   query,
-  remove
+  remove,
 };
