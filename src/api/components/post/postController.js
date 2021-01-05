@@ -20,5 +20,14 @@ module.exports = (injectedStore) => {
     return store.upsert(TABLE, body);
   };
 
-  return { list, findById, add };
+  const update = (post) => {
+    const body = { id: post.id, body: post.body };
+    return store.upsert(TABLE, body);
+  };
+
+  const remove = (id) => {
+    return store.remove(TABLE, { id });
+  };
+
+  return { list, findById, add, update, remove };
 };

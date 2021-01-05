@@ -84,7 +84,7 @@ async function upsert(table, data) {
     row = await get(table, data.id);
   }
 
-  if (!row.length) {
+  if (_.isEmpty(row)) {
     return insert(table, data);
   } else {
     return update(table, data);
@@ -114,7 +114,7 @@ function query(table, query, join) {
 function remove(table, firstCondition, othersCondition = []) {
   let andConditions = "";
   if (othersCondition.length > 0) {
-    andConditions = othersCondition.map((c) => "AND ?").join(" ");
+    andConditions = othersCondition.map(() => "AND ?").join(" ");
   }
 
   return new Promise((resolve, reject) => {

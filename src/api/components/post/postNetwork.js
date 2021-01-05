@@ -32,9 +32,18 @@ router.post("/", secure("identify"), (req, res, next) => {
     .catch(next);
 });
 
-router.put("/", (req, res, next) => {
+router.put("/", secure("update"), (req, res, next) => {
   controller
     .update(req.body)
+    .then((data) => {
+      response.success(req, res, data);
+    })
+    .catch(next);
+});
+
+router.delete("/:id", secure("remove"), (req, res, next) => {
+  controller
+    .remove(req.params.id)
     .then((data) => {
       response.success(req, res, data);
     })
